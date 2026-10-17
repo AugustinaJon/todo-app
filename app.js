@@ -9,10 +9,14 @@ const themeToggle = document.getElementById("theme-toggle");
 
 let todos = loadTodos();
 
+// Which item to animate on the next render.
+let justAddedId = null;
+let justToggledId = null;
+
 function loadTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   if (saved === "dark" || saved === "light") return saved;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return "dark";
 }
 
 function applyTheme(theme) {
@@ -49,6 +53,8 @@ function render() {
   todos.forEach((todo) => {
     const item = document.createElement("li");
     item.className = "todo-item" + (todo.done ? " done" : "");
+    if (todo.id === justAddedId) item.classList.add("enter");
+    if (todo.id === justToggledId) item.classList.add("pop");
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -64,17 +70,32 @@ function render() {
     deleteBtn.className = "delete-btn";
     deleteBtn.textContent = "×";
     deleteBtn.setAttribute("aria-label", "Delete task");
-    deleteBtn.addEventListener("click", () => deleteTodo(todo.id));
+    deleteBtn.addEventListener("click", () => removeWithAnimation(item, todo.id));
 
     item.append(checkbox, text, deleteBtn);
     list.appendChild(item);
   });
 
   emptyMessage.hidden = todos.length > 0;
+  justAddedId = null;
+  justToggledId = null;
+}
+
+// Delete the task now, then slide the item out before redrawing.
+function removeWithAnimation(item, id) {
+  if (item.classList.contains("leaving")) return;
+  todos = todos.filter((todo) => todo.id !== id);
+  saveTodos();
+  item.classList.add("leaving");
+  item.addEventListener("animationend", (event) => {
+    if (event.target === item) render();
+  });
 }
 
 function addTodo(text) {
-  todos.push({ id: Date.now().toString(), text, done: false });
+  const id = Date.now().toString();
+  todos.push({ id, text, done: false });
+  justAddedId = id;
   saveTodos();
   render();
 }
@@ -83,12 +104,7 @@ function toggleTodo(id) {
   todos = todos.map((todo) =>
     todo.id === id ? { ...todo, done: !todo.done } : todo
   );
-  saveTodos();
-  render();
-}
-
-function deleteTodo(id) {
-  todos = todos.filter((todo) => todo.id !== id);
+  justToggledId = id;
   saveTodos();
   render();
 }
