@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+._*
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Secrets — never commit these
+.env
+.env.*
+
+# Local Claude Code settings
+.claude/settings.local.json
