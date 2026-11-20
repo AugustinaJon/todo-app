@@ -12,8 +12,15 @@
 <body>
   <main class="app">
     <header class="app-header">
-      <h1>Todo</h1>
-      <button id="theme-toggle" class="theme-toggle" type="button"></button>
+      <div class="app-header-top">
+        <h1>Todo</h1>
+        <button id="theme-toggle" class="theme-toggle" type="button"></button>
+      </div>
+      <nav class="filters" aria-label="Filter tasks">
+        <button type="button" class="filter" data-filter="all">All <span class="filter-count" data-count="all">0</span></button>
+        <button type="button" class="filter" data-filter="active">To do <span class="filter-count" data-count="active">0</span></button>
+        <button type="button" class="filter" data-filter="done">Done <span class="filter-count" data-count="done">0</span></button>
+      </nav>
     </header>
 
     <form id="todo-form" class="todo-form">

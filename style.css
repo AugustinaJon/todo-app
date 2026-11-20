@@ -24,6 +24,9 @@
   --hover-bg: rgba(243, 233, 210, 0.05);
   --title: #f3e9d2;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --band: #7a1f35;
+  --band-text: #f3e9d2;
+  --count-text: #140d0f;
 }
 
 /* Light mood: same palette on cream. */
@@ -48,6 +51,9 @@
   --hover-bg: rgba(42, 20, 24, 0.04);
   --title: #2a1418;
   --shadow: 0 24px 60px rgba(42, 20, 24, 0.12);
+  --band: #7a1f35;
+  --band-text: #f3e9d2;
+  --count-text: #fbf5e8;
 }
 
 body {
@@ -68,31 +74,39 @@ body {
   max-width: 520px;
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-top: 2px solid var(--burgundy);
   border-radius: 10px;
+  overflow: hidden;
   box-shadow: var(--shadow);
   padding: 40px 36px 32px;
   animation: rise-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
   transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
+/* Nav band: burgundy strip with folder tabs on its bottom edge. */
 .app-header {
+  margin: -40px -36px 28px;
+  padding: 28px 36px 0;
+  background: var(--band);
+  color: var(--band-text);
+}
+
+.app-header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
 }
 
 h1 {
   margin: 0;
   font-family: "Bungee", Impact, "Arial Black", sans-serif;
-  font-size: 2.2rem;
+  font-size: 2.4rem;
   font-weight: 400;
+  line-height: 1;
   letter-spacing: 0.03em;
-  color: var(--title);
+  color: var(--band-text);
   text-shadow:
-    2px 2px 0 var(--burgundy),
-    4px 4px 0 var(--green);
+    3px 3px 0 var(--green),
+    6px 6px 0 rgba(20, 13, 15, 0.45);
   transform: rotate(-1.5deg);
   transition: transform 0.3s ease;
 }
@@ -102,9 +116,9 @@ h1:hover {
 }
 
 .theme-toggle {
-  border: 1px solid var(--input-border);
+  border: 1px solid rgba(243, 233, 210, 0.3);
   background: transparent;
-  color: var(--text);
+  color: var(--band-text);
   font-size: 1rem;
   line-height: 1;
   cursor: pointer;
@@ -114,8 +128,61 @@ h1:hover {
 }
 
 .theme-toggle:hover {
-  background: var(--hover-bg);
+  background: rgba(243, 233, 210, 0.12);
   transform: rotate(20deg);
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+  margin-top: 28px;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 9px 9px 0 0;
+  padding: 11px 16px 12px;
+  background: rgba(243, 233, 210, 0.1);
+  color: rgba(243, 233, 210, 0.78);
+  font: 600 0.95rem/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.filter:hover {
+  background: rgba(243, 233, 210, 0.2);
+  color: var(--band-text);
+}
+
+/* The active tab takes the card color and opens into the list. */
+.filter[aria-pressed="true"] {
+  background: var(--card-bg);
+  color: var(--text);
+  box-shadow: inset 0 3px 0 var(--green-bright);
+}
+
+.filter-count {
+  min-width: 22px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(243, 233, 210, 0.16);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.filter[aria-pressed="true"] .filter-count {
+  background: var(--green-bright);
+  color: var(--count-text);
+}
+
+.filter:focus-visible {
+  outline: 2px solid var(--band-text);
+  outline-offset: -4px;
 }
 
 .todo-form {
@@ -171,8 +238,12 @@ h1:hover {
   transform: translateY(0) scale(0.98);
 }
 
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--band-text);
+  outline-offset: 2px;
+}
+
 .todo-form button:focus-visible,
-.theme-toggle:focus-visible,
 .delete-btn:focus-visible {
   outline: 2px solid var(--green-bright);
   outline-offset: 2px;
@@ -355,6 +426,28 @@ h1:hover {
 @keyframes fade-in {
   from {
     opacity: 0;
+  }
+}
+
+/* Small screens: tighter card, tabs share the width. */
+@media (max-width: 480px) {
+  body {
+    padding: 32px 12px;
+  }
+
+  .app {
+    padding: 32px 20px 24px;
+  }
+
+  .app-header {
+    margin: -32px -20px 24px;
+    padding: 22px 20px 0;
+  }
+
+  .filter {
+    flex: 1;
+    justify-content: center;
+    padding: 11px 8px 12px;
   }
 }
 
